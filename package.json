@@ -1,0 +1,49 @@
+{
+  "name": "izimodal-wrap",
+  "version": "0.10.1",
+  "description": "A simple wrapper for iziModal",
+  "main": "dist/commonjs/iziModalWrap.js",
+  "typings": "dist/commonjs/iziModalWrap",
+  "sass": "styles/iziModalWrap.scss",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/voltsonic/javascript-izimodal-wrap.git"
+  },
+  "author": "voltsonic",
+  "license": "MIT",
+  "dependencies": {
+    "izimodal-1.6.0": "^1.6.1",
+    "deepmerge": "^4.2.2"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.3.31",
+    "@types/node": "^12.12.12",
+    "badge-management": "^1.0.2",
+    "typescript": "^3.7.2",
+    "version-management": "^1.0.7"
+  },
+  "badges": {
+    "injectors": {
+      "README.md": [
+        {
+          "definitions": [
+            "repository",
+            "version"
+          ]
+        }
+      ]
+    },
+    "definitions": {
+      "version": {
+        "type": "package_version"
+      },
+      "repository": {
+        "type": "package_repository_url"
+      }
+    }
+  }
+}
