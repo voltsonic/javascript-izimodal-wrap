@@ -3,24 +3,26 @@
     "strictNullChecks": false,
     "allowSyntheticDefaultImports":  true,
     "skipLibCheck": true,
-    "target": "es5",
+    "target": "es2015",
     "module": "commonjs",
-    "declaration": true,
     "lib": ["es2015", "dom"],
-    "types": [ "jquery" ],
+    "allowJs": true,
+    "declaration": true,
+    "checkJs": true,
     "outDir": "./dist/commonjs",
+    "rootDir": "./src/",
     "strict": true,
+    "esModuleInterop": true,
     "typeRoots": [
-      "./typings",
-      "node_modules/@types"
+      "node_modules/@types",
+      "src/@types-internal"
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "./typings/**/*.d.ts"
+    "src/**/*.ts"
   ],
-  "exclude": ["node_modules", "**/__tests__/*"],
-  "rules": {
-    "interface-name" : [true, "never-prefix"]
-  }
+  "exclude": [
+    "node_modules",
+    "**/__tests__/*"
+  ]
 }
