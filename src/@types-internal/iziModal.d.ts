@@ -6,8 +6,9 @@
 // Jquery Wrap
 interface JQuery<HTMLElement> {
     iziModal(): void;
+    iziModal(get: string): any;
     iziModal(options: any): void;
-    iziModal(methodKey: string, options?: any): void;
+    iziModal(methodKey: string, options?: any): any;
 }
 
 // Transitions Options
