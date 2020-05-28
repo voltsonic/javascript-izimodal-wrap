@@ -6,6 +6,7 @@
 import deepmerge from "deepmerge";
 import {iziModalWrapGlobal} from "./Modules/iziModalWrapGlobal";
 import InvalidModeIMW from "./Errors/InvalidModeIMW";
+import InvalidThemeKeyIMW from "./Errors/InvalidThemeKeyIMW";
 
 $.fn.iziModal = require("izimodal-1.6.0");
 
@@ -216,10 +217,15 @@ export default class iziModalWrap {
                 if(!meRoot.config.modes.hasOwnProperty(modeKey))
                     throw new InvalidModeIMW(modeKey);
                 const mode = meRoot.config.modes[modeKey];
-                const theme = iziModalWrapGlobal.getSettings().theme;
+                const themes = iziModalWrapGlobal.getSettings().theme;
+                const themeKey = mode.themeKey;
+                if(!themes.colors.hasOwnProperty(themeKey))
+                    throw new InvalidThemeKeyIMW(themeKey);
+
                 meRoot.methods()
-                    .header.color(theme.colors[modeKey])
+                    .header.color(themes.colors[themeKey])
                 ;
+
                 r.title(
                     mode.title
                         ? (typeof mode.title === 'function'
@@ -233,8 +239,8 @@ export default class iziModalWrap {
                 );
                 let themeIcon: false | string = mode.iconOverwrite
                     ? (typeof mode.iconOverwrite === 'function' ? mode.iconOverwrite() : mode.iconOverwrite)
-                    : (theme.icons.hasOwnProperty(modeKey)
-                        ? theme.icons[modeKey]
+                    : (themes.icons.hasOwnProperty(themeKey)
+                        ? themes.icons[themeKey]
                         : false)
                 ;
 
