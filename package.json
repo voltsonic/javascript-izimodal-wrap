@@ -1,6 +1,6 @@
 {
   "name": "izimodal-wrap",
-  "version": "0.10.1",
+  "version": "1.0.0",
   "description": "A simple wrapper for iziModal",
   "main": "dist/commonjs/iziModalWrap.js",
   "typings": "dist/commonjs/iziModalWrap",
