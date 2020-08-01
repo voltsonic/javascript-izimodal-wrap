@@ -1,13 +1,14 @@
 "use strict";
 
+import iziModalWrapGlobal from "./iziModalWrapGlobal";
+import InvalidModeIMW from "./Errors/InvalidModeIMW";
+import InvalidThemeKeyIMW from "./Errors/InvalidThemeKeyIMW";
+import iziWrapMethods from "./Modules/iziWrapMethods";
+import MergeDeep from "./Utils/MergeDeep";
+
 // Hacky way of importing iziModal
 // Looking for suggestions.
 // This relies on src/@types-internal
-import deepmerge from "deepmerge";
-import {iziModalWrapGlobal} from "./Modules/iziModalWrapGlobal";
-import InvalidModeIMW from "./Errors/InvalidModeIMW";
-import InvalidThemeKeyIMW from "./Errors/InvalidThemeKeyIMW";
-
 $.fn.iziModal = require("izimodal-1.6.0");
 
 interface IModalWrapConfigInternal {
@@ -56,10 +57,8 @@ export type TModalWrapConfigMerge = string | {
 interface IModalSelectors {
     id: string,
     idSel: string,
-    $?: JQuery<HTMLElement>
+    $: JQuery<HTMLElement>
 }
-
-export {iziModalWrapGlobal} from "./Modules/iziModalWrapGlobal";
 
 export default class iziModalWrap {
     protected listeners: TiziModalListeners = {
@@ -71,13 +70,20 @@ export default class iziModalWrap {
         onClosed: [],
         afterRender: []
     };
-
     public modal: IModalSelectors = {
         id: '',
         idSel: '',
         $: undefined
     };
     protected config: IModalWrapConfigInternal;
+    public methods: iziWrapMethods;
+
+    protected setupClass(classTemplate: string): string {
+        const globalSettings = iziModalWrapGlobal.getSettings();
+        return classTemplate
+            .replace('{prefixId}', globalSettings.statics.prefixId)
+            .replace('{modalId}', this.config.modalId);
+    }
 
     constructor(config: TModalWrapConfigMerge){
         const globalSettings = iziModalWrapGlobal.getSettings();
@@ -86,16 +92,27 @@ export default class iziModalWrap {
         if(typeof config === 'string')
             config = { modalId: config };
 
-        this.modal.id = config.modalId;
+
+        this.modal.id = (
+                globalSettings.statics.prefixId.length > 0
+                    ? (globalSettings.statics.prefixId+'-')
+                    : ''
+            ) +
+            config.modalId;
         this.modal.idSel = '#'+this.modal.id;
-        if($(this.modal.idSel).length === 0)
-            $('<body>')
-                .append($('<div class="iziModal">').attr("id", this.modal.id));
+
+        if($(this.modal.idSel).length === 0){
+            const e = document.createElement('div');
+            e.classList.add('iziModal');
+            e.id = this.modal.id;
+            console.log('create', e);
+            document.getElementsByTagName('body')[0].appendChild(e);
+        }
         this.modal.$ = $(this.modal.idSel);
 
-        // TODO: needs more thorough approach to merging into the internal config so we can drop deepmerge.
-        // @ts-ignore.
-        this.config = deepmerge({
+        this.methods = new iziWrapMethods(this);
+
+        this.config = MergeDeep.combine({
             layerUp: 0,
             fullscreen: {
                 ifMobile: false,
@@ -109,12 +126,8 @@ export default class iziModalWrap {
         const prefixId = globalSettings.statics.prefixId;
 
         // Setup: Modal
-        const modalOpenClass = globalSettings.classes.modal.open
-            .replace('{prefixId}', prefixId)
-            .replace('{modalId}', this.modal.id);
-        const modalOpenedClass = globalSettings.classes.modal.opened
-            .replace('{prefixId}', prefixId)
-            .replace('{modalId}', this.modal.id);
+        const modalOpenClass = this.setupClass(globalSettings.classes.modal.open);
+        const modalOpenedClass = this.setupClass(globalSettings.classes.modal.opened);
 
         const $b = $('body');
 
@@ -139,7 +152,7 @@ export default class iziModalWrap {
             configIzi.onOpening = () => {
                 $b
                     .attr('data-'+prefixId+'-n-opened', ($(".iziModal:visible").length + 1))
-                    .addClass(globalSettings.classes.modals.open)
+                    .addClass(this.setupClass(globalSettings.classes.modals.open))
                     .addClass(modalOpenClass);
                 if(onOpening) onOpening();
                 for(let cb of this.listeners.onOpening) cb();
@@ -158,12 +171,12 @@ export default class iziModalWrap {
         // Wrappers: On Closing
         ((onClosing?: TOnClosingCallback) => {
             configIzi.onClosing = () => {
-                this.modal.$.removeClass(globalSettings.classes.modal.opened);
+                this.modal.$.removeClass(modalOpenedClass);
 
                 const visibleAfterClose = ($(".iziModal:visible").length - 1);
                 
                 if(visibleAfterClose === 0)
-                    $b.removeClass(globalSettings.classes.modals.open);
+                    $b.removeClass(this.setupClass(globalSettings.classes.modals.open));
 
                 $b.removeClass(modalOpenClass);
 
@@ -178,7 +191,7 @@ export default class iziModalWrap {
                 const visibleAfterClose = $(".iziModal:visible").length;
 
                 if (visibleAfterClose === 0)
-                    $b.removeClass(globalSettings.classes.modals.open);
+                    $b.removeClass(this.setupClass(globalSettings.classes.modals.open));
 
                 if (onClosed) onClosed();
                 for (let cb of this.listeners.onClosed) cb();
@@ -195,8 +208,8 @@ export default class iziModalWrap {
 
         configIzi.zindex = (globalSettings.statics.layerUpBase + this.config.layerUp);
 
-        this.modal.$.iziModal(config);
-        this.modal.$.addClass(globalSettings.classes.modal.setup);
+        this.modal.$.iziModal(configIzi);
+        this.modal.$.addClass(this.setupClass(globalSettings.classes.modal.setup));
 
         if(
             this.config.fullscreen.forced ||
@@ -210,212 +223,6 @@ export default class iziModalWrap {
             this.modal.$.iziModal("open");
     }
 
-    theme(): iziModalWrapThemeWrap {
-        const meRoot = this;
-        const r: iziModalWrapThemeWrap = {
-            it: (modeKey: string): iziModalWrapThemeWrap => {
-                if(!meRoot.config.modes.hasOwnProperty(modeKey))
-                    throw new InvalidModeIMW(modeKey);
-                const mode = meRoot.config.modes[modeKey];
-                const themes = iziModalWrapGlobal.getSettings().theme;
-                const themeKey = mode.themeKey;
-                if(!themes.colors.hasOwnProperty(themeKey))
-                    throw new InvalidThemeKeyIMW(themeKey);
-
-                meRoot.methods()
-                    .header.color(themes.colors[themeKey])
-                ;
-
-                r.title(
-                    mode.title
-                        ? (typeof mode.title === 'function'
-                            ? mode.title()
-                            : mode.title
-                        )
-                        : '',
-                    typeof mode.subtitle === 'function'
-                        ? mode.subtitle()
-                        : mode.subtitle
-                );
-                let themeIcon: false | string = mode.iconOverwrite
-                    ? (typeof mode.iconOverwrite === 'function' ? mode.iconOverwrite() : mode.iconOverwrite)
-                    : (themes.icons.hasOwnProperty(themeKey)
-                        ? themes.icons[themeKey]
-                        : false)
-                ;
-
-                if(themeIcon){
-                    r.icon(themeIcon)
-                }
-
-                return r;
-            },
-            title: (title: string, subTitle?: string): iziModalWrapThemeWrap => {
-                meRoot.methods().
-                    header.headerTitle(title)
-                    .header.headerSubtitle(subTitle)
-                return r;
-            },
-            icon: (icon: string, iconText?: string): iziModalWrapThemeWrap => {
-                meRoot.methods().
-                header.iconClass(icon)
-                    .header.iconText(iconText ?? '')
-                return r;
-            },
-            end: (): iziModalWrap => {
-                return meRoot;
-            }
-        };
-        return r;
-    }
-
-    methods(): iziModalWrapMethodWrap {
-        const meRoot = this;
-        const r: iziModalWrapMethodWrap = {
-            groups: {
-                get: () => this.modal.$.iziModal('getGroup'),
-                set: (to: string): iziModalWrapMethodWrap => {
-                    this.modal.$.iziModal('setGroup', to);
-                    return r;
-                },
-                next: (transitionIn?: string, transitionOut?: string) => {
-                    this.modal.$.iziModal('next', {transitionIn, transitionOut});
-                    return r;
-                },
-                prev: (transitionIn?: string, transitionOut?: string) => {
-                    this.modal.$.iziModal('prev', {transitionIn, transitionOut});
-                    return r;
-                },
-            },
-            loading: {
-                start: () => {
-                    this.modal.$.iziModal('startLoading')
-                    return r;
-                },
-                stop: () => {
-                    this.modal.$.iziModal('stopLoading');
-                    return r;
-                },
-            },
-            progress: {
-                start: () => {
-                    this.modal.$.iziModal('startLoading');
-                    return r;
-                },
-                pause: () => {
-                    this.modal.$.iziModal('stopLoading');
-                    return r;
-                },
-                resume: () => {
-                    this.modal.$.iziModal('stopLoading');
-                    return r;
-                },
-                reset: () => {
-                    this.modal.$.iziModal('stopLoading');
-                    return r;
-                },
-            },
-            position: {
-                top: (to: string | number) => {
-                    this.modal.$.iziModal('setTop', to);
-                    return r;
-                },
-                bottom: (to: string | number) => {
-                    this.modal.$.iziModal('setBottom', 100);
-                    return r;
-                },
-                width: (to: string | number) => {
-                    this.modal.$.iziModal('setWidth', to);
-                    return r;
-                },
-                zIndex: (to: number) => {
-                    this.modal.$.iziModal('setZindex', to);
-                    return r;
-                },
-            },
-            header: {
-                color: (to: string) => {
-                    this.modal.$.iziModal('setHeaderColor', to);
-                    return r;
-                },
-                enable: () => {
-                    this.modal.$.iziModal('setHeader', true);
-                    return r;
-                },
-                disable: () => {
-                    this.modal.$.iziModal('setHeader', false);
-                    return r;
-                },
-                iconClass: to =>  {
-                    this.modal.$.iziModal('setIcon', to);
-                    return r;
-                },
-                iconText: to =>  {
-                    this.modal.$.iziModal('setIconText', to);
-                    return r;
-                },
-                headerTitle: to =>  {
-                    this.modal.$.iziModal('setTitle', to);
-                    return r;
-                },
-                headerSubtitle: to =>  {
-                    this.modal.$.iziModal('setSubtitle', to ?? '');
-                    return r;
-                },
-            },
-            content: {
-                backgroundColor: (to: string) => {
-                    this.modal.$.iziModal('setBackground', to);
-                    return r;
-                },
-                set: (content: string, isDefault: boolean = true) => {
-                    this.modal.$.iziModal('setContent', {
-                        content,
-                        default: isDefault
-                    });
-                    return r;
-                },
-                reset: () => {
-                    this.modal.$.iziModal('resetContent');
-                    return r;
-                }
-            },
-            animations: {
-                transitionIn: to =>  {
-                    this.modal.$.iziModal('setTransitionIn', to);
-                    return r;
-                },
-                transitionOut: to =>  {
-                    this.modal.$.iziModal('setTransitionOut', to);
-                    return r;
-                },
-            },
-            display: {
-                get: (): 'closed' | 'closing' | 'opened' | 'opening' => this.modal.$.iziModal('getState'),
-                fullscreen: (enable = false) =>  {
-                    this.modal.$.iziModal('setFullscreen', enable);
-                    return r;
-                },
-                toggle: (): iziModalWrapMethodWrap => {
-                    this.modal.$.iziModal('toggle');
-                    return r;
-                },
-                open: (): iziModalWrapMethodWrap => {
-                    this.modal.$.iziModal('open');
-                    return r;
-                },
-                close: (): iziModalWrapMethodWrap => {
-                    this.modal.$.iziModal('close');
-                    return r;
-                }
-            },
-            end(): iziModalWrap {
-                return meRoot;
-            }
-        };
-        return r;
-    }
-
     // Event Wrappers.
     on(listen: TOnFullScreenEvent, callback: TOnFullScreenCallback): iziModalWrap;
     on(listen: TOnResizeEvent, callback: TOnResizeCallback): iziModalWrap;
@@ -424,7 +231,7 @@ export default class iziModalWrap {
     on(listen: TOnClosingEvent, callback: TOnClosingCallback): iziModalWrap;
     on(listen: TOnClosedEvent, callback: TOnClosedCallback): iziModalWrap;
     on(listen: TAfterRenderEvent, callback: TAfterRenderCallback): iziModalWrap;
-    on(listen: TModalEventStrings, cb: TModalEvents, toFront: boolean = false) {
+    on(listen: TModalEventStrings, cb: TModalEvents, toFront: boolean = false): iziModalWrap {
         let key: false | TiziModalKeys = false;
         switch(listen){
             case "fullscreen": key = 'onFullscreen'; break;
@@ -454,4 +261,3 @@ export default class iziModalWrap {
         });
     }
 }
-
