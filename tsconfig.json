@@ -3,7 +3,7 @@
     "strictNullChecks": false,
     "allowSyntheticDefaultImports":  true,
     "skipLibCheck": true,
-    "target": "es2015",
+    "target": "es5",
     "module": "commonjs",
     "lib": ["es2015", "dom"],
     "allowJs": true,
