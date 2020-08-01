@@ -112,7 +112,7 @@ interface IIMWGlobalSettingsInner {
     },
 }
 
-export class iziModalWrapGlobal {
+export default class iziModalWrapGlobal {
     protected static globalSettings: null | IIMWGlobalSettingsInner = null;
     private static __rootStyle: false | CSSStyleDeclaration = false;
 
