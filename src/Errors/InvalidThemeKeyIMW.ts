@@ -7,7 +7,7 @@ export default class InvalidThemeKeyIMW extends Error {
 
     constructor(public message: string) {
         super(util.format(InvalidThemeKeyIMW.DEFAULT_MESSAGE, message));
-        this.name = "InvalidThemeKeyIMW";
+        this.name = "InvalidModeIMW";
         this.stack = (<any> new Error()).stack;
     }
 }
