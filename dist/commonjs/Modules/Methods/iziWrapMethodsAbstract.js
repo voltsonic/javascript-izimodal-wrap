@@ -12,18 +12,19 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var util = require('util');
-var InvalidThemeKeyIMW = /** @class */ (function (_super) {
-    __extends(InvalidThemeKeyIMW, _super);
-    function InvalidThemeKeyIMW(message) {
-        var _this = _super.call(this, util.format(InvalidThemeKeyIMW.DEFAULT_MESSAGE, message)) || this;
-        _this.message = message;
-        _this.name = "InvalidModeIMW";
-        _this.stack = new Error().stack;
-        return _this;
+var iziWrapModuleAbstract_1 = __importDefault(require("../iziWrapModuleAbstract"));
+var iziWrapMethodsAbstract = /** @class */ (function (_super) {
+    __extends(iziWrapMethodsAbstract, _super);
+    function iziWrapMethodsAbstract() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    InvalidThemeKeyIMW.DEFAULT_MESSAGE = 'Invalid Theme Key: %s';
-    return InvalidThemeKeyIMW;
-}(Error));
-exports.default = InvalidThemeKeyIMW;
+    iziWrapMethodsAbstract.prototype.up = function () {
+        return this.w.methods;
+    };
+    return iziWrapMethodsAbstract;
+}(iziWrapModuleAbstract_1.default));
+exports.default = iziWrapMethodsAbstract;

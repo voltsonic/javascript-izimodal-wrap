@@ -1,16 +1,16 @@
+import iziWrapMethods from "./Modules/iziWrapMethods";
+import { TThemeTypesAll } from "./iziModalWrapGlobal";
+import iziWrapTheme from "./Modules/iziWrapTheme";
+interface IModalTheme {
+    title?: string | (() => string);
+    subtitle?: string | (() => string);
+    icon?: string | (() => (string | undefined));
+}
 interface IModalWrapConfigInternal {
     modalId: string;
     layerUp: number;
-    modes: {
-        [mode: string]: {
-            themeKey: string;
-            title?: string | (() => string);
-            subtitle?: string | (() => string);
-            /**
-             * This value should be setup in iziModalWrapGlobal.init().addTheme(); but can be dynamically overwritten here.
-             */
-            iconOverwrite?: string | (() => string);
-        };
+    themes: {
+        [themeKey in TThemeTypesAll]: IModalTheme;
     };
     fullscreen: {
         ifMobile: boolean;
@@ -19,19 +19,15 @@ interface IModalWrapConfigInternal {
     openRightAway: boolean;
     iziModalSettings: IziModalSettings;
 }
-export declare type TModalWrapConfigMerge = string | {
-    modalId: string;
+declare type TModalId = string;
+export declare type TModalWrapConfigMerge = TModalId | {
+    modalId: TModalId;
     layerUp?: number;
-    modes?: {
-        [mode: string]: {
-            themeKey: string;
-            title?: string | (() => string);
-            subtitle?: string | (() => string);
-            /**
-             * This value should be setup in iziModalWrapGlobal.init().addTheme(); but can be dynamically overwritten here.
-             */
-            iconOverwrite?: string | (() => string);
-        };
+    events?: {
+        [event in TModalEventStrings]: TModalEvents;
+    };
+    themes?: {
+        [themeKey in TThemeTypesAll]: IModalTheme;
     };
     fullscreen?: {
         ifMobile?: boolean;
@@ -43,16 +39,16 @@ export declare type TModalWrapConfigMerge = string | {
 interface IModalSelectors {
     id: string;
     idSel: string;
-    $?: JQuery<HTMLElement>;
+    $: JQuery<HTMLElement>;
 }
-export { iziModalWrapGlobal } from "./Modules/iziModalWrapGlobal";
 export default class iziModalWrap {
     protected listeners: TiziModalListeners;
     modal: IModalSelectors;
-    protected config: IModalWrapConfigInternal;
+    config: IModalWrapConfigInternal;
+    methods: iziWrapMethods;
+    theme: iziWrapTheme;
+    protected setupClass(classTemplate: string): string;
     constructor(config: TModalWrapConfigMerge);
-    theme(): iziModalWrapThemeWrap;
-    methods(): iziModalWrapMethodWrap;
     on(listen: TOnFullScreenEvent, callback: TOnFullScreenCallback): iziModalWrap;
     on(listen: TOnResizeEvent, callback: TOnResizeCallback): iziModalWrap;
     on(listen: TOnOpeningEvent, callback: TOnOpeningCallback): iziModalWrap;
@@ -60,8 +56,9 @@ export default class iziModalWrap {
     on(listen: TOnClosingEvent, callback: TOnClosingCallback): iziModalWrap;
     on(listen: TOnClosedEvent, callback: TOnClosedCallback): iziModalWrap;
     on(listen: TAfterRenderEvent, callback: TAfterRenderCallback): iziModalWrap;
-    applyMethod(method: string, options?: any): any;
-    applyMethods(apply: {
+    applyMethodRaw(method: string, options?: any): any;
+    applyMethodsRaw(apply: {
         [method: string]: any;
     }): void;
 }
+export {};
