@@ -10,4 +10,8 @@ export default abstract class iziWrapModuleAbstract {
     }
 
     init(){}
+
+    up(): any | iziModalWrap {
+        return this.w;
+    }
 }
