@@ -1,29 +1,26 @@
 "use strict";
 
-import iziModalWrapGlobal from "./iziModalWrapGlobal";
-import InvalidModeIMW from "./Errors/InvalidModeIMW";
-import InvalidThemeKeyIMW from "./Errors/InvalidThemeKeyIMW";
+// const iziModalWrapGlobalInner = require('./iziModalWrapGlobal');
 import iziWrapMethods from "./Modules/iziWrapMethods";
 import MergeDeep from "./Utils/MergeDeep";
+import iziModalWrapGlobal, {TThemeTypesAll} from "./iziModalWrapGlobal";
+import iziWrapTheme from "./Modules/iziWrapTheme";
 
 // Hacky way of importing iziModal
 // Looking for suggestions.
 // This relies on src/@types-internal
 $.fn.iziModal = require("izimodal-1.6.0");
 
+interface IModalTheme {
+    title?: string | (() => string),
+    subtitle?: string | (() => string),
+    icon?: string | (() => (string | undefined)), // This value should be setup in iziModalWrapGlobal.themeAdd(); but can be dynamically overwritten here (returning undefined uses the fallback icon).
+}
 interface IModalWrapConfigInternal {
     modalId: string,
     layerUp: number,
-    modes: {
-        [mode: string]: {
-            themeKey: string,
-            title?: string | (() => string),
-            subtitle?: string | (() => string),
-            /**
-             * This value should be setup in iziModalWrapGlobal.init().addTheme(); but can be dynamically overwritten here.
-             */
-            iconOverwrite?: string | (() => string),
-        },
+    themes: {
+        [themeKey in TThemeTypesAll]: IModalTheme
     },
     fullscreen: {
         ifMobile: boolean,
@@ -32,19 +29,18 @@ interface IModalWrapConfigInternal {
     openRightAway: boolean,
     iziModalSettings: IziModalSettings,
 }
-export type TModalWrapConfigMerge = string | {
-    modalId: string,
+
+type TModalId = string;
+
+
+export type TModalWrapConfigMerge = TModalId | {
+    modalId: TModalId,
     layerUp?: number,
-    modes?: {
-        [mode: string]: {
-            themeKey: string,
-            title?: string | (() => string),
-            subtitle?: string | (() => string),
-            /**
-             * This value should be setup in iziModalWrapGlobal.init().addTheme(); but can be dynamically overwritten here.
-             */
-            iconOverwrite?: string | (() => string),
-        },
+    events?: {
+        [event in TModalEventStrings]: TModalEvents
+    },
+    themes?: {
+        [themeKey in TThemeTypesAll]: IModalTheme
     },
     fullscreen?: {
         ifMobile?: boolean,
@@ -75,8 +71,9 @@ export default class iziModalWrap {
         idSel: '',
         $: undefined
     };
-    protected config: IModalWrapConfigInternal;
+    public config: IModalWrapConfigInternal;
     public methods: iziWrapMethods;
+    public theme: iziWrapTheme;
 
     protected setupClass(classTemplate: string): string {
         const globalSettings = iziModalWrapGlobal.getSettings();
@@ -92,7 +89,6 @@ export default class iziModalWrap {
         if(typeof config === 'string')
             config = { modalId: config };
 
-
         this.modal.id = (
                 globalSettings.statics.prefixId.length > 0
                     ? (globalSettings.statics.prefixId+'-')
@@ -105,12 +101,12 @@ export default class iziModalWrap {
             const e = document.createElement('div');
             e.classList.add('iziModal');
             e.id = this.modal.id;
-            console.log('create', e);
             document.getElementsByTagName('body')[0].appendChild(e);
         }
         this.modal.$ = $(this.modal.idSel);
 
         this.methods = new iziWrapMethods(this);
+        this.theme = new iziWrapTheme(this);
 
         this.config = MergeDeep.combine({
             layerUp: 0,
@@ -174,7 +170,7 @@ export default class iziModalWrap {
                 this.modal.$.removeClass(modalOpenedClass);
 
                 const visibleAfterClose = ($(".iziModal:visible").length - 1);
-                
+
                 if(visibleAfterClose === 0)
                     $b.removeClass(this.setupClass(globalSettings.classes.modals.open));
 
@@ -221,6 +217,13 @@ export default class iziModalWrap {
 
         if(this.config.openRightAway)
             this.modal.$.iziModal("open");
+
+        if(config.events)
+            for(let eventKey in config.events)
+                if(config.events.hasOwnProperty(eventKey)){
+                    // @ts-ignore.
+                    this.on(eventKey, config.events[eventKey]);
+                }
     }
 
     // Event Wrappers.
@@ -252,12 +255,12 @@ export default class iziModalWrap {
     }
 
     // Raw Method Applies
-    public applyMethod(method: string, options?: any): any {
+    public applyMethodRaw(method: string, options?: any): any {
         return this.modal.$.iziModal(method, options);
     }
-    public applyMethods(apply: { [method: string]: any }){
+    public applyMethodsRaw(apply: { [method: string]: any }){
         Object.keys(apply).forEach((method: any) => {
-            this.applyMethod(method, apply[method]);
+            this.applyMethodRaw(method, apply[method]);
         });
     }
 }
