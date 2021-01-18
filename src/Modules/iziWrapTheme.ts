@@ -1,68 +1,64 @@
 "use strict";
 
 import iziWrapModuleAbstract from "./iziWrapModuleAbstract";
-import iziModalWrapGlobal from "../iziModalWrapGlobal";
-import InvalidModeIMW from "../Errors/InvalidModeIMW";
+import iziModalWrapGlobal, {TThemeTypesAll} from "../iziModalWrapGlobal";
 import InvalidThemeKeyIMW from "../Errors/InvalidThemeKeyIMW";
+import iziModalWrap from "../iziModalWrap";
+
+const formatItem = (
+    itemWrap?: string | (() => string),
+    itemGlobal?: string | (() => string),
+    returnDefault: any = '',
+): string => {
+    if(typeof itemWrap === 'string')
+        return itemWrap;
+    if(typeof itemWrap === 'function')
+        return itemWrap();
+    if(typeof itemGlobal === 'string')
+        return itemGlobal;
+    if(typeof itemGlobal === 'function')
+        return itemGlobal();
+    return returnDefault;
+};
 
 export default class iziWrapTheme extends iziWrapModuleAbstract {
-    private modes: boolean;
-
-    public mode(modeKey: string): iziWrapTheme {
-        if(!this.modes.hasOwnProperty(modeKey))
-            throw new InvalidModeIMW(modeKey);
-        const mode = this.modes[modeKey];
-        const themes = iziModalWrapGlobal.getSettings().theme;
-        const themeKey = mode;
-        if(!themes.colors.hasOwnProperty(themeKey))
+    public mode(themeKey: TThemeTypesAll): iziModalWrap {
+        const themeWrap = this.w.config.themes[themeKey];
+        const themeGlobal = iziModalWrapGlobal.themeGet(themeKey);
+        if(!themeGlobal && !themeWrap)
             throw new InvalidThemeKeyIMW(themeKey);
 
-        meRoot.methods()
-            .header.color(themes.colors[themeKey])
-        ;
+        this.w.methods.header.color(themeGlobal.color);
+        this.title(
+            formatItem(themeWrap.title, themeGlobal.title),
+            formatItem(themeWrap.subtitle, themeGlobal.subtitle, undefined));
 
-        r.title(
-            mode.title
-                ? (typeof mode.title === 'function'
-                    ? mode.title()
-                    : mode.title
-                )
-                : '',
-            typeof mode.subtitle === 'function'
-                ? mode.subtitle()
-                : mode.subtitle
+        let themeIcon: false | string = formatItem(
+            themeWrap.icon,
+            themeGlobal.icon,
+            false
         );
-        let themeIcon: false | string = mode.iconOverwrite
-            ? (typeof mode.iconOverwrite === 'function' ? mode.iconOverwrite() : mode.iconOverwrite)
-            : (themes.icons.hasOwnProperty(themeKey)
-                ? themes.icons[themeKey]
-                : false)
-        ;
 
         if(themeIcon){
-            r.icon(themeIcon)
+            this.icon(themeIcon)
         }
 
-        return this;
-    }
-    public init() {
-        this.modes = iziModalWrapGlobal.getSettings();
-        super.init();
+        return this.up();
     }
 
     public title(title: string, subTitle?: string): iziWrapTheme {
-        this.w.methods.header().title(title);
+        this.w.methods.header.title(title);
         this.subtitle(subTitle);
         return this;
     }
     public subtitle(subTitle?: string): iziWrapTheme {
-        this.w.methods.header().subtitle(subTitle ?? '');
+        this.w.methods.header.subtitle(subTitle ?? '');
         return this;
     }
     public icon(icon: string, iconText?: string): iziWrapTheme {
-        this.w.methods
-            .header().iconClass(icon)
-            .header().iconText(iconText ?? '');
+        this.w.methods.header
+            .iconClass(icon)
+            .iconText(iconText ?? '');
         return this;
     }
 }
