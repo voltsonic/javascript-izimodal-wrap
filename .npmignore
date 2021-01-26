@@ -1,0 +1,9 @@
+docs/
+.idea/
+badges/
+docs/
+docs-html/
+test/
+tslint.json
+tsconfig.json
+TODO.md

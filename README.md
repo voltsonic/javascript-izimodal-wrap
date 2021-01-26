@@ -1,23 +1,18 @@
 # iziModalWraps
 
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+
 A simple wrapper for iziModal.
-
-[comment_badge_management_start]: <hidden__do_not_remove>
-[![repository badge](badges/repository.png)](https://github.com/voltsonic/javascript-izimodal-wrap.git) ![version badge](badges/version.png)
-
-[comment_badge_management_end]: <hidden__do_not_remove>
 
 ---
 
 ### Prerequisites
 
 - jQuery >= 2.x
-- iziModal >= 1.6.0
-- deepmerge >= 4.x
 
 ### Prerequisites (Development on iziModalWrap)
 
-- Typescript (tested with 3.7 branch, more to come)
+- Typescript (tested with 4.1.x branch, more to come)
 
 ### Install
 
@@ -25,4 +20,4 @@ A simple wrapper for iziModal.
 
 ### CDN
 
-Currently not setup.
+Currently, not setup.

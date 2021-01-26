@@ -2,12 +2,29 @@
   "name": "izimodal-wrap",
   "version": "1.0.0",
   "description": "A simple wrapper for iziModal",
-  "main": "dist/commonjs/iziModalWrap.js",
-  "typings": "dist/commonjs/iziModalWrap",
+  "main": "dist/iziModalWrap.js",
+  "typings": "dist/iziModalWrap.d.ts",
   "sass": "styles/iziModalWrap.scss",
   "scripts": {
-    "tests": "ts-mocha --exit -r jsdom-global/register -p ./tsconfig.json src/**/*.spec.ts",
-    "build": "npm run tests && rm -fr dist/* && node_modules/.bin/tsc"
+    "build": "npm run clean && npm run lint && npm run test && tsc",
+    "build_docs": "npm run clean_docs && typedoc && typedoc --options typedoc-html.json",
+    "changelog": "conventional-changelog -p angular -u",
+    "changelog:update": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
+    "clean_docs": "(rm -r ./docs || true) && (rm -r ./docs-html || true)",
+    "clean": "(rm -r ./.nyc_output || true) && (rm -r ./coverage || true) && (rm -r ./dist || true)",
+    "clean:all": "npm run clean && (rm -r ./node_modules || true)",
+    "cover": "nyc npm run test",
+    "cover:check": "nyc --check-coverage npm run test",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "lint": "tslint src/**/*.ts test/**/*.ts",
+    "lint_file": "tslint --out _lints/tslint.json --format json src/**/*.ts test/**/*.ts",
+    "lint_auto": "tslint --fix src/**/*.ts test/**/*.ts",
+    "preversion": "npm run build && npm run cover:check",
+    "postversion": "git push && git push --tags",
+    "prepare": "npm run build",
+    "test": "ts-mocha --exit -r jsdom-global/register -p ./tsconfig.json test/*.spec.ts",
+    "upgrade": "npx npm-check -u",
+    "version": "npm run build && npm run changelog:update"
   },
   "repository": {
     "type": "git",
@@ -16,7 +33,8 @@
   "author": "voltsonic",
   "license": "MIT",
   "dependencies": {
-    "izimodal-1.6.0": "^1.6.1"
+    "izimodal-1.6.0": "^1.6.1",
+    "sitka": "^1.0.5"
   },
   "devDependencies": {
     "@types/chai": "^4.2.14",
@@ -25,16 +43,29 @@
     "@types/jsdom": "16.2.6",
     "@types/jsdom-global": "3.0.2",
     "@types/mocha": "^8.2.0",
-    "@types/node": "^14.14.20",
-    "badge-management": "^1.0.2",
+    "@types/node": "^14.14.22",
     "chai": "^4.2.0",
     "chai-fs": "^2.0.0",
+    "conventional-changelog-cli": "^2.1.1",
+    "coveralls": "^3.1.0",
+    "cz-conventional-changelog": "^3.3.0",
     "jsdom": "16.4.0",
     "jsdom-global": "3.0.2",
     "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
+    "source-map-support": "^0.5.19",
     "ts-mocha": "^8.0.0",
-    "typescript": "^4.1.3",
-    "version-management": "^1.0.7"
+    "ts-node": "^9.1.1",
+    "tslint": "^6.0.0",
+    "typedoc": "^0.20.19",
+    "typedoc-neo-theme": "^1.1.0",
+    "typedoc-plugin-markdown": "^3.4.3",
+    "typescript": "^4.1.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   },
   "badges": {
     "injectors": {

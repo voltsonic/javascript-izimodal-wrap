@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import MergeDeep from "./Utils/MergeDeep";
+import MergeDeep from './Utils/MergeDeep';
 
-export type TThemeTypesBuiltIn = "add" | "edit" | "delete" | "primary" | "secondary" | "success" | "danger" | "warning" | "info" | "light" | "dark";
+export type TThemeTypesBuiltIn = 'add' | 'edit' | 'delete' | 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark';
 export type TThemeTypesAll = TThemeTypesBuiltIn | string;
 
 type IIMWGlobalIconType = string | (() => (string | undefined));
@@ -18,17 +18,17 @@ interface IIMWGlobalTheme {
 export interface IIMWGlobalSettings {
     classes?: {
         modals?: {
-            open?: string
+            open?: '{prefixId}-open' | string
         },
         modal?: {
-            open?: string,
-            opened?: string,
-            setup?: string
+            open?: '{prefixId}-open-{modalId}' | string,
+            opened?: '{prefixId}-opened-{modalId}' | string,
+            setup?: '{prefixId}-ran-{modalId}' | string
         }
     },
     statics?: {
         layerUpBase?: number,
-        prefixId?: string,
+        prefixId?: 'izimw' | string,
         mobileMode?: boolean,
         isMobileDevice?: boolean | (() => boolean)
     },
@@ -40,7 +40,7 @@ export interface IIMWGlobalSettings {
         e_xl?: number,
     }
     themes?: {
-        [themeKey in TThemeTypesAll]: IIMWGlobalTheme
+        [themeKey in TThemeTypesAll]?: IIMWGlobalTheme
     },
 }
 
@@ -76,23 +76,30 @@ interface IIMWGlobalSettingsStatic {
         e_xl: number,
     }
     themes: {
-        [themeKey in TThemeTypesAll]: IIMWGlobalThemeStatic
+        [themeKey in TThemeTypesAll]?: IIMWGlobalThemeStatic
     },
 }
 
+// tslint:disable-next-line:class-name
 class iziModalWrapGlobalInner {
     protected __init = false;
+    // @ts-ignore
     protected globalSettings: IIMWGlobalSettingsStatic;
     protected __rootStyle: false | CSSStyleDeclaration = false;
 
     protected __getRootStyle(): CSSStyleDeclaration {
         if(!this.__rootStyle){
-            this.__rootStyle = getComputedStyle(document.querySelector('body'));
+            const body = document.querySelector('body');
+            if(body){
+                this.__rootStyle = getComputedStyle(body);
+            }else{
+                throw new Error('Body tag not accessible.');
+            }
         }
         return this.__rootStyle;
     }
     protected getPropVal(key: string, _default: string = '#000'): string {
-        const r = this.__getRootStyle().getPropertyValue("--"+key);
+        const r = this.__getRootStyle().getPropertyValue('--'+key);
         if(r.length > 0)
             return r;
         return _default;
@@ -137,31 +144,31 @@ class iziModalWrapGlobalInner {
             this.globalSettings = MergeDeep.combine(({
                 classes: {
                     modals: {
-                        open: "{prefixId}-open"
+                        open: '{prefixId}-open'
                     },
                     modal: {
-                        open: "{prefixId}-open-{modalId}",
-                        opened: "{prefixId}-opened-{modalId}",
-                        setup: "{prefixId}-ran-{modalId}"
+                        open: '{prefixId}-open-{modalId}',
+                        opened: '{prefixId}-opened-{modalId}',
+                        setup: '{prefixId}-ran-{modalId}'
                     }
                 },
                 statics: {
-                    prefixId: "izimw",
+                    prefixId: 'izimw',
                     isMobileDevice: false,
                     layerUpBase: 1072,
                 },
                 themes: {
-                    add: {          color: this.getPropVal("--add", "#2C5937"),         icon: this.getPropVal("--add",  "") },
-                    edit: {         color: this.getPropVal("--edit", "#2364AA"),        icon: this.getPropVal("--edit",  "") },
-                    delete: {       color: this.getPropVal("--delete", "#930119"),      icon: this.getPropVal("--delete",  "") },
-                    primary: {      color: this.getPropVal("--primary",  "#007bff"),    icon: this.getPropVal("--primary",  "") },
-                    secondary: {    color: this.getPropVal("--secondary","#6c757d"),    icon: this.getPropVal("--secondary",  "") },
-                    success: {      color: this.getPropVal("--success",  "#28a745"),    icon: this.getPropVal("--success",  "") },
-                    danger: {       color: this.getPropVal("--danger",   "#dc3545"),    icon: this.getPropVal("--danger",  "") },
-                    warning: {      color: this.getPropVal("--warning",  "#ffc107"),    icon: this.getPropVal("--warning",  "") },
-                    info: {         color: this.getPropVal("--info",     "#17a2b8"),    icon: this.getPropVal("--info",  "") },
-                    light: {        color: this.getPropVal("--light",    "#f8f9fa"),    icon: this.getPropVal("--light",  "") },
-                    dark: {         color: this.getPropVal("--dark",     "#343a40"),    icon: this.getPropVal("--dark",  "") },
+                    add: {          color: this.getPropVal('--add', '#2C5937'),         icon: this.getPropVal('--add',  '') },
+                    edit: {         color: this.getPropVal('--edit', '#2364AA'),        icon: this.getPropVal('--edit',  '') },
+                    delete: {       color: this.getPropVal('--delete', '#930119'),      icon: this.getPropVal('--delete',  '') },
+                    primary: {      color: this.getPropVal('--primary',  '#007bff'),    icon: this.getPropVal('--primary',  '') },
+                    secondary: {    color: this.getPropVal('--secondary','#6c757d'),    icon: this.getPropVal('--secondary',  '') },
+                    success: {      color: this.getPropVal('--success',  '#28a745'),    icon: this.getPropVal('--success',  '') },
+                    danger: {       color: this.getPropVal('--danger',   '#dc3545'),    icon: this.getPropVal('--danger',  '') },
+                    warning: {      color: this.getPropVal('--warning',  '#ffc107'),    icon: this.getPropVal('--warning',  '') },
+                    info: {         color: this.getPropVal('--info',     '#17a2b8'),    icon: this.getPropVal('--info',  '') },
+                    light: {        color: this.getPropVal('--light',    '#f8f9fa'),    icon: this.getPropVal('--light',  '') },
+                    dark: {         color: this.getPropVal('--dark',     '#343a40'),    icon: this.getPropVal('--dark',  '') },
                 },
                 widths: {
                     a_xs: 350,
@@ -175,7 +182,7 @@ class iziModalWrapGlobalInner {
         return this;
     }
 
-    public getSettings(): IIMWGlobalSettings {
+    public getSettings(): IIMWGlobalSettingsStatic {
         this.init();
         return this.globalSettings;
     }

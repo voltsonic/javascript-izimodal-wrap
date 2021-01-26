@@ -1,28 +1,40 @@
 {
   "compilerOptions": {
-    "strictNullChecks": false,
-    "allowSyntheticDefaultImports":  true,
-    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "preserveConstEnums": true,
+    "resolveJsonModule": true,
     "target": "es5",
     "module": "commonjs",
-    "lib": ["es2015", "dom"],
-    "allowJs": true,
+    "lib": ["es5", "es6", "DOM"],
     "declaration": true,
-    "checkJs": true,
-    "outDir": "./dist/commonjs",
-    "rootDir": "./src/",
+    "sourceMap": true,
+    "outDir": "dist",
+    "rootDir": "src",
     "strict": true,
-    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "moduleResolution": "node",
     "typeRoots": [
       "node_modules/@types",
-      "src/@types-internal"
-    ]
+      "types"
+    ],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports":  true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "checkJs": true
   },
-  "include": [
-    "src/**/*.ts"
-  ],
   "exclude": [
+    "badges",
+    "dist",
+    "docs",
+    "docs-html",
+    "styles",
+    "developer",
     "node_modules",
-    "**/__tests__/*"
+    "test"
   ]
 }

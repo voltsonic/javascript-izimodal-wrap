@@ -1,23 +1,32 @@
-"use strict";
+'use strict';
 
-import iziWrapModuleAbstract from "./iziWrapModuleAbstract";
-import iziWrapMethodsAnimations from "./Methods/iziWrapMethodsAnimations";
-import iziWrapMethodsContent from "./Methods/iziWrapMethodsContent";
-import iziWrapMethodsDisplay from "./Methods/iziWrapMethodsDisplay";
-import iziWrapMethodsGroup from "./Methods/iziWrapMethodsGroup";
-import iziWrapMethodsHeader from "./Methods/iziWrapMethodsHeader";
-import iziWrapMethodsLoading from "./Methods/iziWrapMethodsLoading";
-import iziWrapMethodsPosition from "./Methods/iziWrapMethodsPosition";
-import iziWrapMethodsProgress from "./Methods/iziWrapMethodsProgress";
+import iziWrapModuleAbstract from './iziWrapModuleAbstract';
+import iziWrapMethodsAnimations from './Methods/iziWrapMethodsAnimations';
+import iziWrapMethodsContent from './Methods/iziWrapMethodsContent';
+import iziWrapMethodsDisplay from './Methods/iziWrapMethodsDisplay';
+import iziWrapMethodsGroup from './Methods/iziWrapMethodsGroup';
+import iziWrapMethodsHeader from './Methods/iziWrapMethodsHeader';
+import iziWrapMethodsLoading from './Methods/iziWrapMethodsLoading';
+import iziWrapMethodsPosition from './Methods/iziWrapMethodsPosition';
+import iziWrapMethodsProgress from './Methods/iziWrapMethodsProgress';
 
+// tslint:disable-next-line:class-name
 export default class iziWrapMethods extends iziWrapModuleAbstract {
+    // @ts-ignore
     public animations: iziWrapMethodsAnimations;
+    // @ts-ignore
     public content: iziWrapMethodsContent;
+    // @ts-ignore
     public display: iziWrapMethodsDisplay;
+    // @ts-ignore
     public groups: iziWrapMethodsGroup;
+    // @ts-ignore
     public header: iziWrapMethodsHeader;
+    // @ts-ignore
     public loading: iziWrapMethodsLoading;
+    // @ts-ignore
     public position: iziWrapMethodsPosition;
+    // @ts-ignore
     public progress: iziWrapMethodsProgress;
 
     public init() {

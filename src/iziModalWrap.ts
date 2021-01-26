@@ -1,15 +1,70 @@
-"use strict";
+'use strict';
 
 // const iziModalWrapGlobalInner = require('./iziModalWrapGlobal');
-import iziWrapMethods from "./Modules/iziWrapMethods";
-import MergeDeep from "./Utils/MergeDeep";
-import iziModalWrapGlobal, {TThemeTypesAll} from "./iziModalWrapGlobal";
-import iziWrapTheme from "./Modules/iziWrapTheme";
+import iziWrapMethods from './Modules/iziWrapMethods';
+import MergeDeep from './Utils/MergeDeep';
+import iziModalWrapGlobal, {TThemeTypesAll} from './iziModalWrapGlobal';
+import iziWrapTheme from './Modules/iziWrapTheme';
+
+type TOnFullScreenCallback = () => void;
+type TOnResizeCallback = () => void;
+type TOnOpeningCallback = () => void;
+type TOnOpenedCallback = () => void;
+type TOnClosingCallback = () => void;
+type TOnClosedCallback = () => void;
+type TAfterRenderCallback = () => void;
+
+type TModalEvents =
+    TOnFullScreenCallback |
+    TOnResizeCallback |
+    TOnOpeningCallback |
+    TOnOpenedCallback |
+    TOnClosingCallback |
+    TOnClosedCallback |
+    TAfterRenderCallback;
+
+type TOnFullScreenEvent = 'fullscreen';
+type TOnResizeEvent = 'resize';
+type TOnOpeningEvent = 'opening';
+type TOnOpenedEvent = 'opened';
+type TOnClosingEvent = 'closing';
+type TOnClosedEvent = 'closed';
+type TAfterRenderEvent = 'after_render';
+
+type TModalEventStrings =
+    TOnFullScreenEvent |
+    TOnResizeEvent |
+    TOnOpeningEvent |
+    TOnOpenedEvent |
+    TOnClosingEvent |
+    TOnClosedEvent |
+    TAfterRenderEvent;
+
+type TiziModalKeys =
+    'onFullscreen' |
+    'onResize' |
+    'onOpening' |
+    'onOpened' |
+    'onClosing' |
+    'onClosed' |
+    'afterRender';
+
+type TiziModalListeners = {
+    onFullscreen?: TOnFullScreenCallback[],
+    onResize?: TOnResizeCallback[],
+    onOpening?: TOnOpeningCallback[],
+    onOpened?: TOnOpenedCallback[],
+    onClosing?: TOnClosingCallback[],
+    onClosed?: TOnClosedCallback[],
+    afterRender?: TAfterRenderCallback[],
+};
 
 // Hacky way of importing iziModal
 // Looking for suggestions.
 // This relies on src/@types-internal
-$.fn.iziModal = require("izimodal-1.6.0");
+// @ts-ignore
+import iziModal from 'izimodal-1.6.0';
+$.fn.iziModal = iziModal;
 
 interface IModalTheme {
     title?: string | (() => string),
@@ -20,7 +75,7 @@ interface IModalWrapConfigInternal {
     modalId: string,
     layerUp: number,
     themes: {
-        [themeKey in TThemeTypesAll]: IModalTheme
+        [themeKey in TThemeTypesAll]?: IModalTheme
     },
     fullscreen: {
         ifMobile: boolean,
@@ -32,15 +87,14 @@ interface IModalWrapConfigInternal {
 
 type TModalId = string;
 
-
 export type TModalWrapConfigMerge = TModalId | {
     modalId: TModalId,
     layerUp?: number,
     events?: {
-        [event in TModalEventStrings]: TModalEvents
+        [event in TModalEventStrings]?: TModalEvents
     },
     themes?: {
-        [themeKey in TThemeTypesAll]: IModalTheme
+        [themeKey in TThemeTypesAll]?: IModalTheme
     },
     fullscreen?: {
         ifMobile?: boolean,
@@ -56,7 +110,25 @@ interface IModalSelectors {
     $: JQuery<HTMLElement>
 }
 
+/**
+ * iziModalWrap constructor.
+ *
+ * @summary
+ * This is the main entrypoint class for wrapping around modals.
+ *
+ * @label iziModalWrap
+ * @example
+ * TS // Basic example.
+ * ```ts
+ * import iziModalWrap from 'izimodal-wrap';
+ * const modal = new iziModalWrap('modal-id');
+ * ```
+ */
+// tslint:disable-next-line:class-name
 export default class iziModalWrap {
+    /**
+     * @hidden
+     */
     protected listeners: TiziModalListeners = {
         onFullscreen: [],
         onResize: [],
@@ -66,19 +138,23 @@ export default class iziModalWrap {
         onClosed: [],
         afterRender: []
     };
+
     public modal: IModalSelectors = {
         id: '',
         idSel: '',
+        // @ts-ignore
         $: undefined
     };
     public config: IModalWrapConfigInternal;
     public methods: iziWrapMethods;
     public theme: iziWrapTheme;
 
-    protected setupClass(classTemplate: string): string {
-        const globalSettings = iziModalWrapGlobal.getSettings();
+    /**
+     * @hidden
+     */
+    private setupClass(classTemplate: string): string {
         return classTemplate
-            .replace('{prefixId}', globalSettings.statics.prefixId)
+            .replace('{prefixId}', iziModalWrapGlobal.getSettings().statics.prefixId)
             .replace('{modalId}', this.config.modalId);
     }
 
@@ -89,9 +165,10 @@ export default class iziModalWrap {
         if(typeof config === 'string')
             config = { modalId: config };
 
+        const prefixId = iziModalWrapGlobal.getSettings().statics.prefixId;
         this.modal.id = (
-                globalSettings.statics.prefixId.length > 0
-                    ? (globalSettings.statics.prefixId+'-')
+                prefixId.length > 0
+                    ? (prefixId+'-')
                     : ''
             ) +
             config.modalId;
@@ -119,10 +196,9 @@ export default class iziModalWrap {
 
         // Setup: Izi Config Base
         const configIzi: IziModalSettings = this.config.iziModalSettings ?? {};
-        const prefixId = globalSettings.statics.prefixId;
 
         // Setup: Modal
-        const modalOpenClass = this.setupClass(globalSettings.classes.modal.open);
+        const modalOpenClass = this.setupClass(globalSettings.classes?.modal?.open);
         const modalOpenedClass = this.setupClass(globalSettings.classes.modal.opened);
 
         const $b = $('body');
@@ -131,7 +207,8 @@ export default class iziModalWrap {
         ((onFullscreen?: TOnFullScreenCallback) => {
             configIzi.onFullscreen = () => {
                 if(onFullscreen) onFullscreen();
-                for(let cb of this.listeners.onFullscreen) cb();
+                if(this.listeners.onFullscreen)
+                    for(const cb of this.listeners.onFullscreen) cb();
             };
         })(configIzi.onFullscreen);
 
@@ -139,7 +216,8 @@ export default class iziModalWrap {
         ((onResize?: TOnResizeCallback) => {
             configIzi.onResize = () => {
                 if(onResize) onResize();
-                for(let cb of this.listeners.onResize) cb();
+                if(this.listeners.onResize)
+                    for(const cb of this.listeners.onResize) cb();
             };
         })(configIzi.onResize);
 
@@ -147,11 +225,12 @@ export default class iziModalWrap {
         ((onOpening?: TOnOpeningCallback) => {
             configIzi.onOpening = () => {
                 $b
-                    .attr('data-'+prefixId+'-n-opened', ($(".iziModal:visible").length + 1))
+                    .attr('data-'+prefixId+'-n-opened', ($('.iziModal:visible').length + 1))
                     .addClass(this.setupClass(globalSettings.classes.modals.open))
                     .addClass(modalOpenClass);
                 if(onOpening) onOpening();
-                for(let cb of this.listeners.onOpening) cb();
+                if(this.listeners.onOpening)
+                    for(const cb of this.listeners.onOpening) cb();
             };
         })(configIzi.onOpening);
 
@@ -160,7 +239,8 @@ export default class iziModalWrap {
             configIzi.onOpened = () => {
                 $b.addClass(modalOpenedClass);
                 if(onOpened) onOpened();
-                for(let cb of this.listeners.onOpened) cb();
+                if(this.listeners.onOpened)
+                    for(const cb of this.listeners.onOpened) cb();
             };
         })(configIzi.onOpened);
 
@@ -169,7 +249,7 @@ export default class iziModalWrap {
             configIzi.onClosing = () => {
                 this.modal.$.removeClass(modalOpenedClass);
 
-                const visibleAfterClose = ($(".iziModal:visible").length - 1);
+                const visibleAfterClose = ($('.iziModal:visible').length - 1);
 
                 if(visibleAfterClose === 0)
                     $b.removeClass(this.setupClass(globalSettings.classes.modals.open));
@@ -177,20 +257,22 @@ export default class iziModalWrap {
                 $b.removeClass(modalOpenClass);
 
                 if(onClosing) onClosing();
-                for(let cb of this.listeners.onClosing) cb();
+                if(this.listeners.onClosing)
+                    for(const cb of this.listeners.onClosing) cb();
             };
         })(configIzi.onClosing);
 
         // Wrappers: On Closed
-        ((onClosed: TOnClosedCallback) => {
+        ((onClosed?: TOnClosedCallback) => {
             configIzi.onClosed = () => {
-                const visibleAfterClose = $(".iziModal:visible").length;
+                const visibleAfterClose = $('.iziModal:visible').length;
 
                 if (visibleAfterClose === 0)
                     $b.removeClass(this.setupClass(globalSettings.classes.modals.open));
 
                 if (onClosed) onClosed();
-                for (let cb of this.listeners.onClosed) cb();
+                if(this.listeners.onClosed)
+                    for (const cb of this.listeners.onClosed) cb();
             };
         })(configIzi.onClosed);
 
@@ -198,7 +280,8 @@ export default class iziModalWrap {
         ((afterRender?: TAfterRenderCallback) => {
             configIzi.afterRender = () => {
                 if(afterRender) afterRender();
-                for(let cb of this.listeners.afterRender) cb();
+                if(this.listeners.afterRender)
+                    for(const cb of this.listeners.afterRender) cb();
             };
         })(configIzi.afterRender);
 
@@ -213,13 +296,13 @@ export default class iziModalWrap {
                 typeof globalSettings.statics.isMobileDevice === 'function' && globalSettings.statics.isMobileDevice() ||
                 globalSettings.statics.isMobileDevice
             ))
-            this.modal.$.iziModal("setFullscreen", true);
+            this.modal.$.iziModal('setFullscreen', true);
 
         if(this.config.openRightAway)
-            this.modal.$.iziModal("open");
+            this.modal.$.iziModal('open');
 
         if(config.events)
-            for(let eventKey in config.events)
+            for(const eventKey in config.events)
                 if(config.events.hasOwnProperty(eventKey)){
                     // @ts-ignore.
                     this.on(eventKey, config.events[eventKey]);
@@ -237,18 +320,20 @@ export default class iziModalWrap {
     on(listen: TModalEventStrings, cb: TModalEvents, toFront: boolean = false): iziModalWrap {
         let key: false | TiziModalKeys = false;
         switch(listen){
-            case "fullscreen": key = 'onFullscreen'; break;
-            case "resize": key = 'onResize'; break;
-            case "opening": key = 'onOpening'; break;
-            case "opened": key = 'onOpened'; break;
-            case "closing": key = 'onClosing'; break;
-            case "closed": key = 'onClosed'; break;
-            case "after_render": key = 'afterRender'; break;
+            case 'fullscreen': key = 'onFullscreen'; break;
+            case 'resize': key = 'onResize'; break;
+            case 'opening': key = 'onOpening'; break;
+            case 'opened': key = 'onOpened'; break;
+            case 'closing': key = 'onClosing'; break;
+            case 'closed': key = 'onClosed'; break;
+            case 'after_render': key = 'afterRender'; break;
         }
 
         if(toFront)
+            // @ts-ignore
             this.listeners[key].unshift(cb);
         else
+            // @ts-ignore
             this.listeners[key].push(cb);
 
         return this;

@@ -1,31 +1,34 @@
-"use strict";
+'use strict';
 
-import iziWrapModuleAbstract from "./iziWrapModuleAbstract";
-import iziModalWrapGlobal, {TThemeTypesAll} from "../iziModalWrapGlobal";
-import InvalidThemeKeyIMW from "../Errors/InvalidThemeKeyIMW";
-import iziModalWrap from "../iziModalWrap";
+import iziWrapModuleAbstract from './iziWrapModuleAbstract';
+import iziModalWrapGlobal, {TThemeTypesAll} from '../iziModalWrapGlobal';
+import InvalidThemeKeyIMW from '../Errors/InvalidThemeKeyIMW';
+import iziModalWrap from '../iziModalWrap';
 
 const formatItem = (
-    itemWrap?: string | (() => string),
-    itemGlobal?: string | (() => string),
+    itemWrap?: string | (() => string) | (() => (string | undefined)),
+    itemGlobal?: string | (() => string) | (() => (string | undefined)),
     returnDefault: any = '',
 ): string => {
     if(typeof itemWrap === 'string')
         return itemWrap;
     if(typeof itemWrap === 'function')
-        return itemWrap();
+        return itemWrap() ?? returnDefault;
     if(typeof itemGlobal === 'string')
         return itemGlobal;
     if(typeof itemGlobal === 'function')
-        return itemGlobal();
+        return itemGlobal() ?? returnDefault;
     return returnDefault;
 };
 
+// tslint:disable-next-line:class-name
 export default class iziWrapTheme extends iziWrapModuleAbstract {
     public mode(themeKey: TThemeTypesAll): iziModalWrap {
         const themeWrap = this.w.config.themes[themeKey];
         const themeGlobal = iziModalWrapGlobal.themeGet(themeKey);
-        if(!themeGlobal && !themeWrap)
+        if(!themeGlobal)
+            throw new InvalidThemeKeyIMW(themeKey);
+        if(!themeWrap)
             throw new InvalidThemeKeyIMW(themeKey);
 
         this.w.methods.header.color(themeGlobal.color);
@@ -33,7 +36,7 @@ export default class iziWrapTheme extends iziWrapModuleAbstract {
             formatItem(themeWrap.title, themeGlobal.title),
             formatItem(themeWrap.subtitle, themeGlobal.subtitle, undefined));
 
-        let themeIcon: false | string = formatItem(
+        const themeIcon: false | string = formatItem(
             themeWrap.icon,
             themeGlobal.icon,
             false

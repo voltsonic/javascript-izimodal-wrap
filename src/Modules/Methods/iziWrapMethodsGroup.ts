@@ -1,8 +1,9 @@
-"use strict";
+'use strict';
 
-import iziWrapMethods from "../iziWrapMethods";
-import iziWrapMethodsAbstract from "./iziWrapMethodsAbstract";
+import iziWrapMethods from '../iziWrapMethods';
+import iziWrapMethodsAbstract from './iziWrapMethodsAbstract';
 
+// tslint:disable-next-line:class-name
 export default class iziWrapMethodsGroup extends iziWrapMethodsAbstract {
     get(){
         return this.w.modal.$.iziModal('getGroup');

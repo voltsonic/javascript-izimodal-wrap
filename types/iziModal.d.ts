@@ -3,20 +3,6 @@
 
 // Note: No need to import to separate project unless you need typings for raw access to $.iziModal()
 
-// Jquery Wrap
-interface JQuery<HTMLElement> {
-    iziModal(): void;
-    iziModal(get: string): any;
-    iziModal(options: any): void;
-    iziModal(methodKey: string, options?: any): any;
-}
-
-// Transitions Options
-interface IziModalTransitions {
-    transitionIn?: string,
-    transitionOut?: string,
-}
-
 // Basic iziModal Settings Block
 interface IziModalSettings {
     title?: string,
@@ -73,4 +59,14 @@ interface IziModalSettings {
     onClosing?: () => void,
     onClosed?: () => void,
     afterRender?: () => void
+}
+
+// Jquery Wrap
+interface JQuery<HTMLElement> {
+    iziModal(): void;
+    iziModal(get: string): any;
+    // tslint:disable-next-line:unified-signatures
+    iziModal(options: IziModalSettings | any): void;
+    // tslint:disable-next-line:unified-signatures
+    iziModal(methodKey: string, options?: any): any;
 }

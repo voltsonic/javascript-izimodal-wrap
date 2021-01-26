@@ -1,0 +1,12 @@
+{
+  "name": "iziModalWrap",
+  "includeVersion": true,
+  "entryPoints": ["./src"],
+  "out": "docs-html",
+  "categorizeByGroup": true,
+  "theme": "node_modules/typedoc-neo-theme/bin/default",
+  "plugin": [
+    "typedoc-neo-theme"
+  ],
+  "readme": "none"
+}

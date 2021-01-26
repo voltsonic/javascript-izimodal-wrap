@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2021-01-xx
 
 ```
-This is a major breaking release from v0.10.1 and it's recommended to go thru all your current iterations.
+This is a major breaking release from v0.10.1 and it's recommended to go thru all your current iterations and testing before updating production.
 ```
 
 ### Moved

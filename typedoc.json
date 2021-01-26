@@ -1,0 +1,12 @@
+{
+  "name": "iziModalWrap",
+  "includeVersion": true,
+  "entryPoints": ["./src"],
+  "out": "docs",
+  "categorizeByGroup": true,
+  "hideInPageTOC": true,
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ],
+  "readme": "none"
+}

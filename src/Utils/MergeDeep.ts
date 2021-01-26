@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Copied from https://stackoverflow.com/a/34749873

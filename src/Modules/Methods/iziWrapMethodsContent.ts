@@ -1,8 +1,11 @@
-"use strict";
+'use strict';
 
-import iziWrapMethods from "../iziWrapMethods";
-import iziWrapMethodsAbstract from "./iziWrapMethodsAbstract";
+import iziWrapMethodsAbstract from './iziWrapMethodsAbstract';
 
+/**
+ * @category Methods
+ */
+// tslint:disable-next-line:class-name
 export default class iziWrapMethodsContent extends iziWrapMethodsAbstract {
     backgroundColor(to: string): iziWrapMethodsContent {
         this.w.modal.$.iziModal('setBackground', to);

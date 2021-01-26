@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import iziWrapMethods from "../iziWrapMethods";
-import iziWrapMethodsAbstract from "./iziWrapMethodsAbstract";
+import iziWrapMethodsAbstract from './iziWrapMethodsAbstract';
 
+// tslint:disable-next-line:class-name
 export default class iziWrapMethodsDisplay extends iziWrapMethodsAbstract {
     get(): 'closed' | 'closing' | 'opened' | 'opening' {
         return this.w.modal.$.iziModal('getState');
