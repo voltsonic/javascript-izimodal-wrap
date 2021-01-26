@@ -1,3 +1,4 @@
+test-ignore-me/
 
 # Created by https://www.gitignore.io/api/node,phpstorm+all
 # Edit at https://www.gitignore.io/?templates=node,phpstorm+all
@@ -77,7 +78,7 @@ jspm_packages/
 # nuxt.js build output
 .nuxt
 
-# react / gatsby 
+# react / gatsby
 public/
 
 # vuepress build output
