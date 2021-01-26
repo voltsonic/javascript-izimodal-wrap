@@ -23,10 +23,21 @@ describe('iziModalWrapGlobalInner // Basics', () => {
         ;
         const s = iziModalWrapGlobal.getSettings();
         chai.assert.isDefined(s.themes.theme_key, 'Missing theme_key.');
-        chai.assert.isDefined(s.themes.theme_key.color, 'Missing color theme_key.');
-        chai.assert.isUndefined(s.themes.theme_key.icon, 'Has icon theme_key?!?!');
+        chai.assert.isDefined(s.themes?.theme_key?.color, 'Missing color theme_key.');
+        chai.assert.isUndefined(s.themes?.theme_key?.icon, 'Has icon theme_key?!?!');
         chai.assert.isDefined(s.themes.theme_key2, 'Missing theme_key2.');
-        chai.assert.isDefined(s.themes.theme_key2.color, 'Missing color theme_key2.');
-        chai.assert.isDefined(s.themes.theme_key2.icon, 'Missing icon theme_key2.');
+        chai.assert.isDefined(s.themes.theme_key2?.color, 'Missing color theme_key2.');
+        chai.assert.isDefined(s.themes.theme_key2?.icon, 'Missing icon theme_key2.');
+    });
+    it('themeGet', () => {
+        const noTheme = iziModalWrapGlobal.themeGet('no_theme');
+        chai.assert.isUndefined(noTheme);
+        const hasTheme = iziModalWrapGlobal.themeGet('primary');
+        chai.assert.isDefined(hasTheme);
     });
 });
+
+// describe('iziModalWrapGlobal // Funcs', () => {
+//     it('getting root style.', () => {
+//     });
+// });
