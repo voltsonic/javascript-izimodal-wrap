@@ -1,3 +1,12 @@
+## [1.0.1-1](https://github.com/voltsonic/javascript-izimodal-wrap/compare/v1.0.1-0...v1.0.1-1) (2021-01-30)
+
+
+### Bug Fixes
+
+* **postversioning:** reference actual version and not hardcoded ([e6ca71c](https://github.com/voltsonic/javascript-izimodal-wrap/commit/e6ca71c38669f25a0ac9390a5718eae516bce72f))
+
+
+
 # [1.0.0](https://github.com/voltsonic/javascript-izimodal-wrap/releases/tag/v1.0.0) (2021-01-29)
 
 ```

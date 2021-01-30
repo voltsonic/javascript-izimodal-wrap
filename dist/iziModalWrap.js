@@ -262,7 +262,7 @@ var iziModalWrap = /** @class */ (function () {
             _this.applyMethodRaw(method, apply[method]);
         });
     };
-    iziModalWrap.VERSION = '1.0.0';
+    iziModalWrap.VERSION = '1.0.1-1';
     iziModalWrap.globals = iziModalWrapGlobal_1.iziModalWrapGlobal;
     return iziModalWrap;
 }());
