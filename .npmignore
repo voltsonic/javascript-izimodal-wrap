@@ -1,8 +1,7 @@
-docs/
 .idea/
 badges/
+developer/
 docs/
-docs-html/
 test/
 tslint.json
 tsconfig.json
