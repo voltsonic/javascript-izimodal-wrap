@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const version = '1.0.1'; // require(path.resolve(root, 'package.json')).version;
+const version = require(path.resolve(root, 'package.json')).version;
 
 const Files = [
     {
