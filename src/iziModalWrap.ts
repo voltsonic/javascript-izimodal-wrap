@@ -127,7 +127,7 @@ export interface IModalSelectors {
  */
 // tslint:disable-next-line:class-name
 export default class iziModalWrap {
-    public static VERSION = '1.0.1-1';
+    public static VERSION = '1.0.1-alpha.0';
 
     /**
      * @hidden
