@@ -19,7 +19,8 @@
     "lint": "tslint src/**/*.ts test/**/*.ts",
     "lint_auto": "tslint --fix src/**/*.ts test/**/*.ts",
     "preversion": "npm run build && npm run cover:check",
-    "postversion": "node developer/version.js && npm run build_tsc && git add . && git commit --amend --no-edit && git push && git push --tags",
+    "postversion": "node developer/version.js && npm run build_tsc && npm run changelog:update",
+    "temp_version_commit": "git add . && git commit --amend --no-edit && git push && git push --tags",
     "test": "ts-mocha --sort --exit -r jsdom-global/register -p ./tsconfig.json test/*.spec.ts",
     "upgrade": "npx npm-check -u"
   },
