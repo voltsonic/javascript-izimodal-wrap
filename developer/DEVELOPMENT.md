@@ -35,17 +35,12 @@ A simple wrapper for iziModal.
 ##### Notes:
 - Autofix lint if IDE does not: `npm run lint_auto` (this is not built into any other commands so much be setup in your own process).
 
-`npm version` what they change.
+`npm version` steps
 ---
 
-From `1.0.0`
+#### New Alpha
 
-| npm version \<type> | New |
-| -------------: | ----------: |
-| major | 2.0.0 |
-| minor | 1.1.0 |
-| patch | 1.0.1 |
-| premajor | 2.0.0-0 |
-| preminor | 1.1.0-0 |
-| prepatch | 1.0.1-0 |
-| prerelease | 2.0.0-0 |
+- Patch: `npm version prerelease --preid=alpha -m "chore(release): Bump version to %s."`
+- Minor: `npm version preminor --preid=alpha -m "chore(release): Bump version to %s."`
+- Major: `npm version premajor --preid=alpha -m "chore(release): Bump version to %s."`
+- Final: `npm version #.#.# -m "chore(release): Bump version to %s."`
