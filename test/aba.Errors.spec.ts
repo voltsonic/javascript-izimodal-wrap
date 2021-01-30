@@ -2,8 +2,8 @@
 
 import chai from 'chai';
 import 'mocha';
-import BodyTagErrorIMW from '../src/Errors/BodyTagErrorIMW';
-import ThemeExistsErrorIMW from '../src/Errors/ThemeExistsErrorIMW';
+import {BodyTagErrorIMW} from '../src/Errors/BodyTagErrorIMW';
+import {ThemeExistsErrorIMW} from '../src/Errors/ThemeExistsErrorIMW';
 
 describe('Errors // Basics', () => {
     it('BodyTagErrorIMW', () => {

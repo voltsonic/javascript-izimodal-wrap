@@ -2,7 +2,7 @@
 
 import util from 'util';
 
-export default class ThemeExistsErrorIMW extends Error {
+export class ThemeExistsErrorIMW extends Error {
     public static DEFAULT_MESSAGE = 'Attempting to add "%s" twice for iziModalWrapGlobal.addTheme().';
 
     constructor(keyOverlap: string) {

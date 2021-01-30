@@ -1,12 +1,17 @@
 {
   "name": "iziModalWrap",
   "includeVersion": true,
+  "tsconfig": "./tsconfig.json",
   "entryPoints": ["./src"],
   "out": "docs",
   "categorizeByGroup": true,
   "hideInPageTOC": true,
   "plugin": [
     "typedoc-plugin-markdown"
+  ],
+  "toc": [
+    "iziModalWrap",
+    "iziModalWrapGlobal"
   ],
   "readme": "none"
 }

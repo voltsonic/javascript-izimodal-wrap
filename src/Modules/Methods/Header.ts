@@ -1,34 +1,33 @@
 'use strict';
 
-import iziWrapMethodsAbstract from './iziWrapMethodsAbstract';
+import {AbstractMethods} from './AbstractMethods';
 
-// tslint:disable-next-line:class-name
-export default class iziWrapMethodsHeader extends iziWrapMethodsAbstract {
-    color(to: string): iziWrapMethodsHeader {
+export class Header extends AbstractMethods {
+    color(to: string): Header {
         this.w.modal.$.iziModal('setHeaderColor', to);
         return this;
     }
-    enable(): iziWrapMethodsHeader {
+    enable(): Header {
         this.w.modal.$.iziModal('setHeader', true);
         return this;
     }
-    disable(): iziWrapMethodsHeader {
+    disable(): Header {
         this.w.modal.$.iziModal('setHeader', false);
         return this;
     }
-    iconClass(to: string): iziWrapMethodsHeader  {
+    iconClass(to: string): Header  {
         this.w.modal.$.iziModal('setIcon', to);
         return this;
     }
-    iconText(to: string): iziWrapMethodsHeader  {
+    iconText(to: string): Header  {
         this.w.modal.$.iziModal('setIconText', to);
         return this;
     }
-    title(to: string): iziWrapMethodsHeader  {
+    title(to: string): Header  {
         this.w.modal.$.iziModal('setTitle', to);
         return this;
     }
-    subtitle(to: string): iziWrapMethodsHeader  {
+    subtitle(to: string): Header  {
         this.w.modal.$.iziModal('setSubtitle', to ?? '');
         return this;
     }

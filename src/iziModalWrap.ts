@@ -1,20 +1,19 @@
 'use strict';
 
-// const iziModalWrapGlobalInner = require('./iziModalWrapGlobal');
-import iziWrapMethods from './Modules/iziWrapMethods';
-import MergeDeep from './Utils/MergeDeep';
-import iziModalWrapGlobal, {TThemeTypesAll} from './iziModalWrapGlobal';
-import iziWrapTheme from './Modules/iziWrapTheme';
+import {ModMethod} from './Modules/ModMethod';
+import {MergeDeep} from './Utils/MergeDeep';
+import {iziModalWrapGlobal, TThemeTypesAll} from './iziModalWrapGlobal';
+import {ModTheme} from './Modules/ModTheme';
 
-type TOnFullScreenCallback = () => void;
-type TOnResizeCallback = () => void;
-type TOnOpeningCallback = () => void;
-type TOnOpenedCallback = () => void;
-type TOnClosingCallback = () => void;
-type TOnClosedCallback = () => void;
-type TAfterRenderCallback = () => void;
+export type TOnFullScreenCallback = () => void;
+export type TOnResizeCallback = () => void;
+export type TOnOpeningCallback = () => void;
+export type TOnOpenedCallback = () => void;
+export type TOnClosingCallback = () => void;
+export type TOnClosedCallback = () => void;
+export type TAfterRenderCallback = () => void;
 
-type TModalEvents =
+export type TModalEvents =
     TOnFullScreenCallback |
     TOnResizeCallback |
     TOnOpeningCallback |
@@ -104,7 +103,7 @@ export type TModalWrapConfigMerge = TModalId | {
     iziModalSettings?: IziModalSettings,
 }
 
-interface IModalSelectors {
+export interface IModalSelectors {
     id: string,
     idSel: string,
     $: JQuery<HTMLElement>
@@ -116,9 +115,7 @@ interface IModalSelectors {
  * @summary
  * This is the main entrypoint class for wrapping around modals.
  *
- * @label iziModalWrap
- * @example
- * TS // Basic example.
+ * @example TS // Basic example.
  * ```ts
  * import iziModalWrap from 'izimodal-wrap';
  * const modal = new iziModalWrap('modal-id');
@@ -126,6 +123,8 @@ interface IModalSelectors {
  */
 // tslint:disable-next-line:class-name
 export default class iziModalWrap {
+    public static VERSION = '1.0.1';
+
     /**
      * @hidden
      */
@@ -145,9 +144,12 @@ export default class iziModalWrap {
         // @ts-ignore
         $: undefined
     };
+    /**
+     * @hidden
+     */
     public config: IModalWrapConfigInternal;
-    public methods: iziWrapMethods;
-    public theme: iziWrapTheme;
+    public methods: ModMethod;
+    public theme: ModTheme;
 
     /**
      * @hidden
@@ -157,6 +159,8 @@ export default class iziModalWrap {
             .replace('{prefixId}', iziModalWrapGlobal.getSettings().statics.prefixId)
             .replace('{modalId}', this.config.modalId);
     }
+
+    public static globals = iziModalWrapGlobal;
 
     constructor(config: TModalWrapConfigMerge){
         const globalSettings = iziModalWrapGlobal.getSettings();
@@ -182,8 +186,8 @@ export default class iziModalWrap {
         }
         this.modal.$ = $(this.modal.idSel);
 
-        this.methods = new iziWrapMethods(this);
-        this.theme = new iziWrapTheme(this);
+        this.methods = new ModMethod(this);
+        this.theme = new ModTheme(this);
 
         this.config = MergeDeep.combine({
             layerUp: 0,

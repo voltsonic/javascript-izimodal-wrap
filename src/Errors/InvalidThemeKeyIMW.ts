@@ -2,7 +2,7 @@
 
 import util from 'util';
 
-export default class InvalidThemeKeyIMW extends Error {
+export class InvalidThemeKeyIMW extends Error {
     public static DEFAULT_MESSAGE = 'Invalid Theme Key: %s';
 
     constructor(public message: string) {

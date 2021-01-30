@@ -1,12 +1,23 @@
 {
   "name": "iziModalWrap",
+  "hideGenerator": true,
   "includeVersion": true,
-  "entryPoints": ["./src"],
-  "out": "docs-html",
-  "categorizeByGroup": true,
-  "theme": "node_modules/typedoc-neo-theme/bin/default",
-  "plugin": [
-    "typedoc-neo-theme"
+  "tsconfig": "./tsconfig.json",
+  "plugin": "none",
+  "entryPoints": [
+    "./src/iziModalWrap.ts",
+    "./src/iziModalWrapGlobal.ts",
+    "./src/Modules/ModTheme.ts",
+    "./src/Modules/ModMethod.ts",
+    "./src/Modules/Methods/Animations.ts",
+    "./src/Modules/Methods/Content.ts",
+    "./src/Modules/Methods/Display.ts",
+    "./src/Modules/Methods/Group.ts",
+    "./src/Modules/Methods/Header.ts",
+    "./src/Modules/Methods/Loading.ts",
+    "./src/Modules/Methods/Position.ts",
+    "./src/Modules/Methods/Progress.ts"
   ],
+  "out": "docs-html",
   "readme": "none"
 }

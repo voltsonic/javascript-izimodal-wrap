@@ -21,3 +21,7 @@ A simple wrapper for iziModal.
 ### CDN
 
 Currently, not setup.
+
+### Version Bumping
+
+`npm version --no-git-tag-version --allow-same-version 1.0.0`

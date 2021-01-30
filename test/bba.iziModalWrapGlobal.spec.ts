@@ -4,11 +4,12 @@ import chai from 'chai';
 import chaiFs from 'chai-fs';
 import jsDomGlobal from 'jsdom-global';
 import 'mocha';
-import iziModalWrapGlobal from '../src/iziModalWrapGlobal';
+import {iziModalWrapGlobal} from '../src/iziModalWrapGlobal';
+import {ThemeExistsErrorIMW} from '../src/Errors/ThemeExistsErrorIMW';
 chai.use(chaiFs);
 jsDomGlobal();
 
-describe('iziModalWrapGlobalInner // Basics', () => {
+describe('iziModalWrapGlobal // Basics', () => {
     it('default config check.', () => {
         chai.assert.equal(
             JSON.stringify(iziModalWrapGlobal.getSettings()),
@@ -18,8 +19,8 @@ describe('iziModalWrapGlobalInner // Basics', () => {
     });
     it('modified theme values.', () => {
         iziModalWrapGlobal
-            .themeAdd('theme_key', '#000000')
-            .themeAdd('theme_key2', '#FFFFFF', 'ico')
+            .addTheme('theme_key', '#000000')
+            .addTheme('theme_key2', '#FFFFFF', 'ico')
         ;
         const s = iziModalWrapGlobal.getSettings();
         chai.assert.isDefined(s.themes.theme_key, 'Missing theme_key.');
@@ -30,14 +31,18 @@ describe('iziModalWrapGlobalInner // Basics', () => {
         chai.assert.isDefined(s.themes.theme_key2?.icon, 'Missing icon theme_key2.');
     });
     it('themeGet', () => {
-        const noTheme = iziModalWrapGlobal.themeGet('no_theme');
+        const noTheme = iziModalWrapGlobal.getTheme('no_theme');
         chai.assert.isUndefined(noTheme);
-        const hasTheme = iziModalWrapGlobal.themeGet('primary');
+        const hasTheme = iziModalWrapGlobal.getTheme('primary');
         chai.assert.isDefined(hasTheme);
     });
+    it('themeAdd (error)', () => {
+        chai.expect(
+            () => iziModalWrapGlobal.addTheme('add', '#000'),
+        ).to.throw(
+            ThemeExistsErrorIMW,
+            /Attempting to add "add" twice for iziModalWrapGlobal.addTheme\(\)\./i,
+            'Theme did not exist?'
+        );
+    });
 });
-
-// describe('iziModalWrapGlobal // Funcs', () => {
-//     it('getting root style.', () => {
-//     });
-// });

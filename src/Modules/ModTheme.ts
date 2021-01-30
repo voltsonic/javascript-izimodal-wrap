@@ -1,8 +1,8 @@
 'use strict';
 
-import iziWrapModuleAbstract from './iziWrapModuleAbstract';
-import iziModalWrapGlobal, {TThemeTypesAll} from '../iziModalWrapGlobal';
-import InvalidThemeKeyIMW from '../Errors/InvalidThemeKeyIMW';
+import {ModAbstract} from './ModAbstract';
+import {iziModalWrapGlobal, TThemeTypesAll} from '../iziModalWrapGlobal';
+import {InvalidThemeKeyIMW} from '../Errors/InvalidThemeKeyIMW';
 import iziModalWrap from '../iziModalWrap';
 
 const formatItem = (
@@ -21,11 +21,10 @@ const formatItem = (
     return returnDefault;
 };
 
-// tslint:disable-next-line:class-name
-export default class iziWrapTheme extends iziWrapModuleAbstract {
+export class ModTheme extends ModAbstract {
     public mode(themeKey: TThemeTypesAll): iziModalWrap {
         const themeWrap = this.w.config.themes[themeKey];
-        const themeGlobal = iziModalWrapGlobal.themeGet(themeKey);
+        const themeGlobal = iziModalWrapGlobal.getTheme(themeKey);
         if(!themeGlobal)
             throw new InvalidThemeKeyIMW(themeKey);
         if(!themeWrap)
@@ -49,16 +48,16 @@ export default class iziWrapTheme extends iziWrapModuleAbstract {
         return this.up();
     }
 
-    public title(title: string, subTitle?: string): iziWrapTheme {
+    public title(title: string, subTitle?: string): ModTheme {
         this.w.methods.header.title(title);
         this.subtitle(subTitle);
         return this;
     }
-    public subtitle(subTitle?: string): iziWrapTheme {
+    public subtitle(subTitle?: string): ModTheme {
         this.w.methods.header.subtitle(subTitle ?? '');
         return this;
     }
-    public icon(icon: string, iconText?: string): iziWrapTheme {
+    public icon(icon: string, iconText?: string): ModTheme {
         this.w.methods.header
             .iconClass(icon)
             .iconText(iconText ?? '');

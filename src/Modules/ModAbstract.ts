@@ -2,8 +2,7 @@
 
 import iziModalWrap from '../iziModalWrap';
 
-// tslint:disable-next-line:class-name
-export default abstract class iziWrapModuleAbstract {
+export abstract class ModAbstract {
     protected w: iziModalWrap;
     constructor(modal: iziModalWrap) {
         this.w = modal;

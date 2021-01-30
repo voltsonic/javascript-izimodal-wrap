@@ -1,4 +1,6 @@
-test-ignore-me/
+dist/
+docs/
+docs-html/
 
 # Created by https://www.gitignore.io/api/node,phpstorm+all
 # Edit at https://www.gitignore.io/?templates=node,phpstorm+all

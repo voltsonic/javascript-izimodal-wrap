@@ -1,25 +1,24 @@
 'use strict';
 
-import iziWrapMethodsAbstract from './iziWrapMethodsAbstract';
+import {AbstractMethods} from './AbstractMethods';
 
-// tslint:disable-next-line:class-name
-export default class iziWrapMethodsDisplay extends iziWrapMethodsAbstract {
+export class Display extends AbstractMethods {
     get(): 'closed' | 'closing' | 'opened' | 'opening' {
         return this.w.modal.$.iziModal('getState');
     }
-    fullscreen(enable = false): iziWrapMethodsDisplay {
+    fullscreen(enable = false): Display {
         this.w.modal.$.iziModal('setFullscreen', enable);
         return this;
     }
-    toggle(): iziWrapMethodsDisplay {
+    toggle(): Display {
         this.w.modal.$.iziModal('toggle');
         return this;
     }
-    open(): iziWrapMethodsDisplay {
+    open(): Display {
         this.w.modal.$.iziModal('open');
         return this;
     }
-    close(): iziWrapMethodsDisplay {
+    close(): Display {
         this.w.modal.$.iziModal('close');
         return this;
     }

@@ -2,7 +2,7 @@
 
 import chai from 'chai';
 import 'mocha';
-import MergeDeep from '../src/Utils/MergeDeep';
+import {MergeDeep} from '../src/Utils/MergeDeep';
 
 describe('MergeDeep // Basics', () => {
     it('Deep', () => {

@@ -1,21 +1,24 @@
 "use strict";
 
-// Usage: node ./version.js -abcf
-// -a = bump major by 1
-// -b = bump minor by 1
-// -c = bump patch by 1
-// -f = set to specific version.
+const fs = require('fs');
+const path = require('path');
 
-const VersionManager = require("version-management"),
-    NodeTemplateModule = require("version-management/Templates/Modules/NodeJS/NodeTemplateModule");
+const root = path.resolve(__dirname, '..');
+const version = '1.0.1'; // require(path.resolve(root, 'package.json')).version;
 
-// Bumps
-let Version = new VersionManager.VersionProgram(__filename+'on');
+const Files = [
+    {
+        file: 'src/iziModalWrap.ts',
+        search: /public static VERSION = '[^']+'/i,
+        replace: `public static VERSION = '${version}'`
+    }
+];
 
-// Run Templates
-VersionManager
-    .VersionTemplates
-    .addTemplate(NodeTemplateModule.standard(require("path").join(__dirname, '..')))
-    .runTemplate(Version.getUpdated());
+for(let f of Files){
+    const raw = fs.readFileSync(f.file, 'utf-8');
+    const replaced = raw.replace(f.search, f.replace);
+    fs.writeFileSync(f.file, replaced, 'utf8');
+}
 
-require("badge-management").run();
+console.log('Complete');
+process.exit(0);
