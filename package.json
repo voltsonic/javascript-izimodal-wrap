@@ -21,8 +21,7 @@
     "lint_auto": "tslint --fix src/**/*.ts test/**/*.ts",
     "preversion": "npm run build && npm run cover:check",
     "version": "node developer/version.js && npm run build && npm run lint && npm run changelog:update && git add .",
-    "postversion": "echo 'run => npm run temp_version_commit'",
-    "temp_version_commit": "git add . && git commit --amend --no-edit && git push && git push --tags",
+    "postversion": "git add . && git commit --amend --no-edit && git push && git push --tags",
     "test": "ts-mocha --sort --exit -r jsdom-global/register -p ./tsconfig.json test/*.spec.ts",
     "upgrade": "npx npm-check -u"
   },
