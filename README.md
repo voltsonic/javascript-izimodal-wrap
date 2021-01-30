@@ -10,10 +10,6 @@ A simple wrapper for iziModal.
 
 - jQuery >= 2.x
 
-### Prerequisites (Development on iziModalWrap)
-
-- Typescript (tested with 4.1.x branch, more to come)
-
 ### Install
 
 - `npm i --save-dev izimodal-wrap` or `npm i --save izimodal-wrap`
@@ -21,7 +17,3 @@ A simple wrapper for iziModal.
 ### CDN
 
 Currently, not setup.
-
-### Version Bumping
-
-`npm version --no-git-tag-version --allow-same-version 1.0.0`
