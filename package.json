@@ -7,11 +7,9 @@
   "sass": "styles/iziModalWrap.scss",
   "scripts": {
     "build": "npm run clean && npm run lint && tsc",
-    "build_docs_html": "(rm -r ./docs-html || true) && typedoc --options ./typedoc-html.json",
-    "build_docs": "npm run clean_docs && typedoc --options typedoc-md.json && typedoc --options ./typedoc-html.json",
+    "build_docs_md": "(rm -r ./docs || true) && typedoc --options ./typedoc-md.json",
     "changelog": "conventional-changelog -p angular -u",
     "changelog:update": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
-    "clean_docs": "(rm -r ./docs || true) && (rm -r ./docs-html || true)",
     "clean": "(rm -r ./.nyc_output || true) && (rm -r ./coverage || true) && (rm -r ./dist || true)",
     "clean:all": "npm run clean && (rm -r ./node_modules || true)",
     "cover": "nyc npm run test",

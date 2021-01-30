@@ -2,7 +2,6 @@
   "name": "iziModalWrap",
   "includeVersion": true,
   "tsconfig": "./tsconfig.json",
-  "entryPoints": ["./src"],
   "out": "docs",
   "categorizeByGroup": true,
   "hideInPageTOC": true,
@@ -13,5 +12,20 @@
     "iziModalWrap",
     "iziModalWrapGlobal"
   ],
-  "readme": "none"
+  "readme": "none",
+  "hideGenerator": true,
+  "entryPoints": [
+    "./src/iziModalWrap.ts",
+    "./src/iziModalWrapGlobal.ts",
+    "./src/Modules/ModTheme.ts",
+    "./src/Modules/ModMethod.ts",
+    "./src/Modules/Methods/Animations.ts",
+    "./src/Modules/Methods/Content.ts",
+    "./src/Modules/Methods/Display.ts",
+    "./src/Modules/Methods/Group.ts",
+    "./src/Modules/Methods/Header.ts",
+    "./src/Modules/Methods/Loading.ts",
+    "./src/Modules/Methods/Position.ts",
+    "./src/Modules/Methods/Progress.ts"
+  ]
 }
