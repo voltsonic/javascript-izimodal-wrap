@@ -74,6 +74,9 @@ interface IModalTheme {
 interface IModalWrapConfigInternal {
     modalId: string,
     layerUp: number,
+    events?: {
+        [event in TModalEventStrings]?: TModalEvents
+    },
     themes: {
         [themeKey in TThemeTypesAll]?: IModalTheme
     },
@@ -212,6 +215,7 @@ export default class iziModalWrap {
         ((onFullscreen?: TOnFullScreenCallback) => {
             configIzi.onFullscreen = () => {
                 if(onFullscreen) onFullscreen();
+                if(this.config.events?.fullscreen) this.config.events.fullscreen();
                 if(this.listeners.onFullscreen)
                     for(const cb of this.listeners.onFullscreen) cb();
             };
@@ -221,6 +225,7 @@ export default class iziModalWrap {
         ((onResize?: TOnResizeCallback) => {
             configIzi.onResize = () => {
                 if(onResize) onResize();
+                if(this.config.events?.resize) this.config.events.resize();
                 if(this.listeners.onResize)
                     for(const cb of this.listeners.onResize) cb();
             };
@@ -234,6 +239,7 @@ export default class iziModalWrap {
                     .addClass(this.setupClass(globalSettings.classes.modals.open))
                     .addClass(modalOpenClass);
                 if(onOpening) onOpening();
+                if(this.config.events?.opening) this.config.events.opening();
                 if(this.listeners.onOpening)
                     for(const cb of this.listeners.onOpening) cb();
             };
@@ -244,6 +250,7 @@ export default class iziModalWrap {
             configIzi.onOpened = () => {
                 $b.addClass(modalOpenedClass);
                 if(onOpened) onOpened();
+                if(this.config.events?.opened) this.config.events.opened();
                 if(this.listeners.onOpened)
                     for(const cb of this.listeners.onOpened) cb();
             };
@@ -262,6 +269,7 @@ export default class iziModalWrap {
                 $b.removeClass(modalOpenClass);
 
                 if(onClosing) onClosing();
+                if(this.config.events?.closing) this.config.events.closing();
                 if(this.listeners.onClosing)
                     for(const cb of this.listeners.onClosing) cb();
             };
@@ -276,6 +284,7 @@ export default class iziModalWrap {
                     $b.removeClass(this.setupClass(globalSettings.classes.modals.open));
 
                 if (onClosed) onClosed();
+                if(this.config.events?.closed) this.config.events.closed();
                 if(this.listeners.onClosed)
                     for (const cb of this.listeners.onClosed) cb();
             };
@@ -285,6 +294,7 @@ export default class iziModalWrap {
         ((afterRender?: TAfterRenderCallback) => {
             configIzi.afterRender = () => {
                 if(afterRender) afterRender();
+                if(this.config.events?.after_render) this.config.events.after_render();
                 if(this.listeners.afterRender)
                     for(const cb of this.listeners.afterRender) cb();
             };
@@ -305,13 +315,6 @@ export default class iziModalWrap {
 
         if(this.config.openRightAway)
             this.modal.$.iziModal('open');
-
-        if(config.events)
-            for(const eventKey in config.events)
-                if(config.events.hasOwnProperty(eventKey)){
-                    // @ts-ignore.
-                    this.on(eventKey, config.events[eventKey]);
-                }
     }
 
     // Event Wrappers.
