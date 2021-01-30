@@ -11,6 +11,11 @@ const Files = [
         file: 'src/iziModalWrap.ts',
         search: /public static VERSION = '[^']+'/i,
         replace: `public static VERSION = '${version}'`
+    },
+    {
+        file: 'README.md',
+        search: /https:\/\/img.shields.io\/badge\/version-[0-9.-]+-informational/i,
+        replace: `https://img.shields.io/badge/version-${version}-informational`
     }
 ];
 
