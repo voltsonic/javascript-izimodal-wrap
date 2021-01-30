@@ -17,3 +17,7 @@ A simple wrapper for iziModal.
 ### CDN
 
 Currently, not setup.
+
+### Development
+
+[click here](./developer/DEVELOPMENT.md) for more information about contributing.
