@@ -63,3 +63,7 @@ Currently, not setup.
 ### Development
 
 [click here](./developer/DEVELOPMENT.md) for more information about contributing.
+
+### Special thanks
+
+To Chris Wells for his [typescript template project](https://github.com/chriswells0/node-typescript-template/) to get things started on `v1.x.x` changes.
