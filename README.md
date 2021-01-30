@@ -7,7 +7,13 @@
 
 A simple wrapper for iziModal.
 
----
+> :warning: This project is undergoing refinement still so use with caution. Once it's fully ready for production I will be bumping to v1.1.0
+>
+> Any feedback just open up an issue on the [Issues](https://github.com/voltsonic/javascript-izimodal-wrap/issues) tab.
+>
+> Most options/events/theming should be pretty concrete. Most changes now are going to be documentation, tests, and linting updates to ensure good releases.
+>
+> Any oddness with version tags in the early stages of the project should be fixed after `v1.0.1-alpha.0`
 
 ### Prerequisites
 
