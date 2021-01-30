@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/voltsonic/javascript-izimodal-wrap/compare/v1.0.1-alpha.0...v1.0.1) (2021-01-30)
+
+
+### Bug Fixes
+
+* **package.json:** moved temp commit script back into postversion (ready) ([50c5d7b](https://github.com/voltsonic/javascript-izimodal-wrap/commit/50c5d7bd5e53302dada3dba2bfeb947d31167659))
+
+
+
 ## [1.0.1-alpha.0](https://github.com/voltsonic/javascript-izimodal-wrap/compare/v1.0.1-0...v1.0.1-alpha.0) (2021-01-30)
 
 
