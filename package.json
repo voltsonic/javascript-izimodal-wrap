@@ -5,6 +5,7 @@
   "main": "dist/iziModalWrap.js",
   "typings": "dist/iziModalWrap.d.ts",
   "sass": "styles/iziModalWrap.scss",
+  "style": "styles/iziModalWrap.css",
   "scripts": {
     "build_tsc": "node_modules/.bin/tsc",
     "build": "npm run clean && npm run lint && node_modules/.bin/tsc",
