@@ -6,7 +6,8 @@
   "typings": "dist/iziModalWrap.d.ts",
   "sass": "styles/iziModalWrap.scss",
   "scripts": {
-    "build": "npm run clean && npm run lint && tsc",
+    "build_tsc": "node_modules/.bin/tsc",
+    "build": "npm run clean && npm run lint && node_modules/.bin/tsc",
     "build_docs_md": "(rm -r ./docs || true) && typedoc --options ./typedoc-md.json",
     "changelog": "conventional-changelog -p angular -u",
     "changelog:update": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
@@ -18,11 +19,9 @@
     "lint": "tslint src/**/*.ts test/**/*.ts",
     "lint_auto": "tslint --fix src/**/*.ts test/**/*.ts",
     "preversion": "npm run build && npm run cover:check",
-    "postversion": "node developer/version.js",
-    "pass_postversion": "git push && git push --tags",
+    "postversion": "node developer/version.js && npm run build_tsc && git add . && git commit --ammend && git push && git push --tags",
     "test": "ts-mocha --sort --exit -r jsdom-global/register -p ./tsconfig.json test/*.spec.ts",
-    "upgrade": "npx npm-check -u",
-    "version": "npm run build && npm run changelog:update"
+    "upgrade": "npx npm-check -u"
   },
   "repository": {
     "type": "git",
