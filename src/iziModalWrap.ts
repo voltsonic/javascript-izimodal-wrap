@@ -1,5 +1,6 @@
 'use strict';
 
+import $ from 'jquery';
 import {ModMethod} from './Modules/ModMethod';
 import {MergeDeep} from './Utils/MergeDeep';
 import {iziModalWrapGlobal, TThemeTypesAll} from './iziModalWrapGlobal';
@@ -63,7 +64,7 @@ type TiziModalListeners = {
 // This relies on src/@types-internal
 // @ts-ignore
 import iziModal from 'izimodal-1.6.0';
-$.fn.iziModal = iziModal;
+$.fn.extend({iziModal});
 
 interface IModalTheme {
     title?: string | (() => string),
@@ -106,7 +107,7 @@ export type TModalWrapConfigMerge = TModalId | {
 export interface IModalSelectors {
     id: string,
     idSel: string,
-    $: JQuery<HTMLElement>
+    $: JQuery<HTMLElement, HTMLElement>
 }
 
 /**
@@ -123,7 +124,7 @@ export interface IModalSelectors {
  */
 // tslint:disable-next-line:class-name
 export default class iziModalWrap {
-    public static VERSION = '1.0.1';
+    public static VERSION = '1.0.0';
 
     /**
      * @hidden
