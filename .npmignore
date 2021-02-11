@@ -1,8 +1,10 @@
 .idea/
-badges/
 developer/
 docs/
+src/
 test/
-tslint.json
-tsconfig.json
+CHANGELOG.md
 TODO.md
+tsconfig.json
+tslint.json
+typedoc-md.json
