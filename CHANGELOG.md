@@ -1,3 +1,13 @@
+## [1.0.2-0](https://github.com/voltsonic/javascript-izimodal-wrap/compare/v1.0.1...v1.0.2-0) (2021-02-11)
+
+
+### Bug Fixes
+
+* **build:** removing build from git repo ([7d13189](https://github.com/voltsonic/javascript-izimodal-wrap/commit/7d131894978f07d5a8fa197047931eed9d07bfca))
+* **build:** updated npm ignore files ([d667581](https://github.com/voltsonic/javascript-izimodal-wrap/commit/d667581192f0da417af704c5cf7b108f416a0241))
+
+
+
 ## [1.0.1](https://github.com/voltsonic/javascript-izimodal-wrap/compare/v1.0.1-alpha.0...v1.0.1) (2021-01-30)
 
 
